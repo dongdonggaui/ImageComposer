@@ -43,7 +43,7 @@ extension ViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UITableViewCell), forIndexPath: indexPath)
         let images = self.datas[indexPath.row]
-        if let image = ImageComposer.composedImage(images as! [UIImage], destinationSize: CGSizeMake(50, 50)) {
+        if let image = ImageComposer.composedImage(images as! [UIImage], destinationSize: CGSizeMake(50, 50), backgroundColor: UIColor.lightGrayColor()) {
             cell.imageView?.image = image
         }
         return cell
