@@ -12,6 +12,8 @@ import UIKit
 private let instance = ImageComposer()
 private let ImageComposerImageViewCount = "count"
 
+public typealias ImageComposerLayoutInfoGenerateBlock = ((size: CGSize, imageCount: Int) -> [String]?)
+
 public class ImageComposer: NSObject {
     
     lazy var canvasViews: Dictionary<String, UIView> = Dictionary()
@@ -25,7 +27,7 @@ public class ImageComposer: NSObject {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidReceiveMemoryWarningNotification, object: nil)
     }
     
-    func composedImage(images: [UIImage], destinationSize size: CGSize, backgroundColor: UIColor) -> UIImage? {
+    func composedImage(images: [UIImage], destinationSize size: CGSize, backgroundColor: UIColor, layoutGenerator: ImageComposerLayoutInfoGenerateBlock) -> UIImage? {
         if images.isEmpty {
             return nil
         }
@@ -61,7 +63,7 @@ public class ImageComposer: NSObject {
         else {
             snapView = UIView(frame: CGRectMake(0, 0, destinationSize.width, destinationSize.height))
             snapView!.backgroundColor = backgroundColor
-            let layoutInfos = self.generateLayoutInfosWithSize(destinationSize, imagesCount: tobeComposeCount)!
+            let layoutInfos = layoutGenerator(size: destinationSize, imageCount: tobeComposeCount)!
             for i in 0..<tobeComposeCount {
                 let image = images[i]
                 let frame = CGRectFromString(layoutInfos[i])
@@ -81,57 +83,6 @@ public class ImageComposer: NSObject {
         
         return image
     }
-    
-    func generateLayoutInfosWithSize(size: CGSize, imagesCount count: Int) -> [String]? {
-        if count == 0 {
-            return nil
-        }
-        
-        if count == 1 {
-            return [NSStringFromCGRect(CGRectMake(0, 0, size.width, size.height))]
-        }
-        
-        if count > 9 {
-            return self.generateLayoutInfosWithSize(size, imagesCount: 9)
-        }
-        
-        var layoutInfos = [String]()
-        var originPoint = CGPointZero
-        let column = count > 4 ? 3 : 2
-        let width = size.width / CGFloat(column)
-        let padding: CGFloat = 0.5
-        
-        if count == 2 || count == 6 {
-            originPoint.y = width * 0.5
-        }
-        else if count == 3 || count == 8 {
-            originPoint.x = width * 0.5
-        }
-        else if count == 5 {
-            originPoint.x = width * 0.5
-            originPoint.y = width * 0.5
-        }
-        else if count == 7 {
-            originPoint.x = width
-        }
-        
-        for i in 0..<count {
-            if originPoint.x + width > size.width {
-                originPoint.x = 0
-                originPoint.y += width
-            }
-            if i == 1 && count == 7 {
-                originPoint.x = 0
-                originPoint.y += width
-            }
-            let frameString = NSStringFromCGRect(CGRectInset(CGRectMake(originPoint.x, originPoint.y, width, width), padding, padding))
-            layoutInfos += [frameString]
-            
-            originPoint.x += width
-        }
-        
-        return layoutInfos
-    }
 }
 
 // MARK: - Class Methods
@@ -148,14 +99,68 @@ extension ImageComposer {
     
     public class func composedImage(images: [UIImage], destinationSize size: CGSize, backgroundColor color: UIColor) -> UIImage? {
         
-        return self.sharedInstance.composedImage(images, destinationSize: size, backgroundColor: color)
+        return self.sharedInstance.composedImage(images, destinationSize: size, backgroundColor: color, layoutGenerator: { (size, imageCount) -> [String]? in
+            
+            let count = imageCount <= 9 ? imageCount : 9
+            
+            if count == 0 {
+                return nil
+            }
+            
+            if count == 1 {
+                return [NSStringFromCGRect(CGRectMake(0, 0, size.width, size.height))]
+            }
+            
+            var layoutInfos = [String]()
+            var originPoint = CGPointZero
+            let column = count > 4 ? 3 : 2
+            let width = size.width / CGFloat(column)
+            let padding: CGFloat = 0.5
+            
+            if count == 2 || count == 6 {
+                originPoint.y = width * 0.5
+            }
+            else if count == 3 || count == 8 {
+                originPoint.x = width * 0.5
+            }
+            else if count == 5 {
+                originPoint.x = width * 0.5
+                originPoint.y = width * 0.5
+            }
+            else if count == 7 {
+                originPoint.x = width
+            }
+            
+            for i in 0..<count {
+                if originPoint.x + width > size.width {
+                    originPoint.x = 0
+                    originPoint.y += width
+                }
+                // 7张图片第二张需特殊处理
+                if i == 1 && count == 7 {
+                    originPoint.x = 0
+                    originPoint.y += width
+                }
+                let frameString = NSStringFromCGRect(CGRectInset(CGRectMake(originPoint.x, originPoint.y, width, width), padding, padding))
+                layoutInfos += [frameString]
+                
+                originPoint.x += width
+            }
+            
+            return layoutInfos
+        })
+    }
+    
+    public class func composedImage(images: [UIImage], destinationSize size: CGSize, backgroundColor color: UIColor, layouInfoGenerator: ImageComposerLayoutInfoGenerateBlock) -> UIImage? {
+        
+        return self.sharedInstance.composedImage(images, destinationSize: size, backgroundColor: color, layoutGenerator: layouInfoGenerator)
     }
 }
 
 // MARK: - Notification
 extension ImageComposer {
     func didReceiveMemoryWarningNotification() {
-        //TODO:
+
         self.canvasViews.removeAll()
     }
 }
