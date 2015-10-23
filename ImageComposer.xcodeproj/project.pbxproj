@@ -84,7 +84,6 @@
 		09652FDE1BD78CD900BBACD9 /* ImageComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComposerTests.swift; sourceTree = "<group>"; };
 		09652FE01BD78CD900BBACD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09652FE91BD78D1D00BBACD9 /* ImageComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageComposer.swift; sourceTree = "<group>"; };
-		09652FEE1BD794D500BBACD9 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,7 +204,6 @@
 			children = (
 				09652FD21BD78CD900BBACD9 /* ImageComposer.h */,
 				09652FE91BD78D1D00BBACD9 /* ImageComposer.swift */,
-				09652FEE1BD794D500BBACD9 /* MyPlayground.playground */,
 				09652FD41BD78CD900BBACD9 /* Info.plist */,
 			);
 			path = ImageComposer;
@@ -730,6 +728,7 @@
 				09180A091BD8A82000A49774 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		09180A0A1BD8A82000A49774 /* Build configuration list for PBXNativeTarget "ImageComposer-DemoTests" */ = {
 			isa = XCConfigurationList;
@@ -738,6 +737,7 @@
 				09180A0C1BD8A82000A49774 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		09180A0D1BD8A82000A49774 /* Build configuration list for PBXNativeTarget "ImageComposer-DemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -746,6 +746,7 @@
 				09180A0F1BD8A82000A49774 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		09652FC91BD78CD900BBACD9 /* Build configuration list for PBXProject "ImageComposer" */ = {
 			isa = XCConfigurationList;
