@@ -68,6 +68,7 @@ public class ImageComposer: NSObject {
                 let image = images[i]
                 let frame = CGRectFromString(layoutInfos[i])
                 let imageView = UIImageView(frame: frame)
+                imageView.tag = 100 + i
                 imageView.image = image
                 snapView!.addSubview(imageView)
             }
